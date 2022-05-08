@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <complex.h>
+#include <string.h>
 #include "util.h"
 
 int calc_pixel(float complex c)
@@ -22,22 +23,43 @@ int calc_pixel(float complex c)
     return count;
 }
 
-int write_ppm(int Dwidth, int Dheight, int **output)
+int write_ppm(char *mode, int iter, int Dwidth, int Dheight, int **output)
 {
     int i, j;
-    FILE *fp = fopen("mandelbort_static.ppm", "wb"); /* b - binary mode */
-    (void)fprintf(fp, "P6\n%d %d\n255\n", Dwidth, Dheight);
+    char directory[1024];
+    snprintf(directory, 1024, "./images/%s/mandelbort_%d.ppm", mode, iter);
+    FILE *fp = fopen(directory, "wb");
+    char *comment = "# ";
+    fprintf(fp, "P6\n %s\n %d\n %d\n 255\n", comment, Dwidth, Dheight);
     for (j = 0; j < Dheight; ++j)
     {
         for (i = 0; i < Dwidth; ++i)
         {
             static unsigned char color[3];
-            color[0] = output[j][i]; /* red */
-            color[1] = output[j][i]; /* green */
-            color[2] = output[j][i]; /* blue */
-            (void)fwrite(color, 1, 3, fp);
+            // if (output[j][i] < 86)
+            // {
+            //     color[0] = 0;
+            //     color[1] = output[j][i];
+            //     color[2] = 255 - output[j][i];
+            // }
+            // if (output[j][i] >= 86 && output[j][i] < 171)
+            // {
+            //     color[0] = 255 - output[j][i];
+            //     color[1] = 0;
+            //     color[2] = output[j][i];
+            // }
+            // if (output[j][i] >= 171)
+            // {
+            //     color[0] = output[j][i];
+            //     color[1] = 255 - output[j][i];
+            //     color[2] = 0;
+            // }
+            color[0] = output[j][i];
+            color[1] = output[j][i];
+            color[2] = output[j][i];
+            fwrite(color, 1, 3, fp);
         }
     }
-    (void)fclose(fp);
-    return EXIT_SUCCESS;
+    fclose(fp);
+    return 0;
 }
