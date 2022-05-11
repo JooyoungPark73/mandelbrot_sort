@@ -19,9 +19,13 @@ int main(int argc, char *argv[])
     float scale_real = (real_max - real_min) / (float)Dwidth;
     float scale_imag = (imag_max - imag_min) / (float)Dheight;
 
+    char name[] = "static";
     int np, me;
     int **MandleBuffer, *WorkerBuffer;
-    int tag = 42;
+    int DATA_TAG = 4;
+    int ALLOCATE_TAG = 8;
+    int KILL_TAG = 9;
+    int FIN_TAG = 44;
     MPI_Status status;
 
     MPI_Init(&argc, &argv);
@@ -55,45 +59,71 @@ int main(int argc, char *argv[])
     {
         int send_count = 0;
         int recv_count = 0;
+        int fin_count = 0;
+        double **log_array = (double **)calloc(sizeof(double *), 2);
+        for (int h = 0; h < 2; h++)
+        {
+            log_array[h] = (double *)calloc(sizeof(double), Dwidth / Nrect);
+        }
+
+        printf("%s with %d Workers\n", name, np);
         while (1)
         {
             for (int p = 1; p < np; p++)
             {
-                int width = send_count * Nrect;
-                MPI_Send(&width, Alloc, MPI_INT, p, tag, MPI_COMM_WORLD);
-
-                send_count++;
                 if (send_count >= Dwidth / Nrect)
                     break;
+                int width = send_count * Nrect;
+                MPI_Send(&width, Alloc, MPI_INT, p, ALLOCATE_TAG, MPI_COMM_WORLD);
+                log_array[0][send_count] = MPI_Wtime();
+                send_count++;
             }
             for (int tasks = 0; tasks < (np - 1) * Dheight; tasks++)
             {
-                MPI_Recv(WorkerBuffer, Nrect + 2, MPI_INT, MPI_ANY_SOURCE, tag, MPI_COMM_WORLD, &status);
-                for (int w = 0; w < Nrect; w++)
+                MPI_Recv(WorkerBuffer, Nrect + 2, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+                if (status.MPI_TAG == FIN_TAG)
                 {
-                    MandleBuffer[WorkerBuffer[1]][WorkerBuffer[0] + w] = WorkerBuffer[w + 2];
+                    log_array[1][WorkerBuffer[0] / Nrect] = MPI_Wtime();
+                    fin_count++;
                 }
-                char name[] = "static";
-                recv_count++;
-                if (recv_count % 20 == 0)
-                    write_ppm(name, recv_count, np, Dwidth, Dheight, MandleBuffer);
+
+                else
+                {
+                    recv_count++;
+                    for (int w = 0; w < Nrect; w++)
+                    {
+                        MandleBuffer[WorkerBuffer[1]][WorkerBuffer[0] + w] = WorkerBuffer[w + 2];
+                    }
+                    if (recv_count % 20 == 0)
+                        write_ppm(name, recv_count, np, Dwidth, Dheight, MandleBuffer);
+                }
                 if (recv_count >= Dwidth * Dheight / Nrect)
                     break;
             }
-            if (recv_count >= Dwidth * Dheight / Nrect)
+            if (fin_count == send_count)
                 break;
         }
         for (int p = 1; p < np; p++)
         {
             int kill = -1;
-            MPI_Send(&kill, Alloc, MPI_INT, p, tag, MPI_COMM_WORLD);
+            MPI_Send(&kill, Alloc, MPI_INT, p, KILL_TAG, MPI_COMM_WORLD);
         }
 
         printf("\nAll Tasks Finished\n");
         char name[] = "static_final";
-        // write_ppm(name, recv_count, np, Dwidth, Dheight, MandleBuffer);
+        write_ppm(name, recv_count, np, Dwidth, Dheight, MandleBuffer);
         printf("Writing Image Done\n");
+        double time_average = 0;
+        double temp = 0;
+        for (int t = 0; t < Dwidth / Nrect; t++)
+        {
+            temp = log_array[1][t] - log_array[0][t];
+            printf("static, process, %d, worker, %d, time, %f\n", np, t, temp);
+            time_average += temp;
+        }
+        printf("static, process, %d, average_time, %f\n", np, time_average / (float)(Dwidth / Nrect));
         free(MandleBuffer);
+        free(log_array);
         MPI_Finalize();
         exit(0);
     }
@@ -103,11 +133,10 @@ int main(int argc, char *argv[])
         int width_n;
         while (1)
         {
-            MPI_Recv(&width_n, Alloc, MPI_INT, 0, tag, MPI_COMM_WORLD, &status);
+            MPI_Recv(&width_n, Alloc, MPI_INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
             WorkerBuffer[0] = width_n;
-            double timelog = MPI_Wtime();
 
-            if (width_n == -1)
+            if (status.MPI_TAG == KILL_TAG)
             {
                 MPI_Finalize();
                 free(WorkerBuffer);
@@ -126,10 +155,9 @@ int main(int argc, char *argv[])
                     int color = calc_pixel(c);
                     WorkerBuffer[x - width_n + 2] = color;
                 }
-                MPI_Send(WorkerBuffer, Nrect + 2, MPI_INT, 0, tag, MPI_COMM_WORLD);
+                MPI_Send(WorkerBuffer, Nrect + 2, MPI_INT, 0, DATA_TAG, MPI_COMM_WORLD);
             }
-            double total_time = MPI_Wtime() - timelog;
-            printf("work %d, time: %f\n", width_n / Nrect, total_time);
+            MPI_Send(WorkerBuffer, Nrect + 2, MPI_INT, 0, FIN_TAG, MPI_COMM_WORLD);
         }
     }
 }

@@ -1,0 +1,119 @@
+static with 2 Workers
+work 0, time: 0.148959
+work 1, time: 0.166592
+work 2, time: 0.153150
+work 3, time: 0.154182
+work 4, time: 0.169001
+work 5, time: 0.155928
+work 6, time: 0.151776
+work 7, time: 0.155490
+work 8, time: 0.150588
+work 9, time: 0.153031
+
+All Tasks Finished
+Writing Image Done
+mpirun -np 3 --oversubscribe bin/mandel_static
+static with 3 Workers
+work 0, time: 0.319381
+work 1, time: 0.337992
+work 2, time: 0.313595
+work 3, time: 0.331156
+work 5, time: 0.324174
+work 4, time: 0.342699
+work 7, time: 0.314368
+work 6, time: 0.342264
+work 8, time: 0.358370
+work 9, time: 0.358351
+
+All Tasks Finished
+Writing Image Done
+mpirun -np 5 --oversubscribe bin/mandel_static
+static with 5 Workers
+work 0, time: 0.669685
+work 1, time: 0.716938
+work 2, time: 0.716882
+work 3, time: 0.716931
+work 6, time: 0.681577
+work 7, time: 0.681536
+work 4, time: 0.718325
+work 5, time: 0.718324
+work 8, time: 0.354054
+work 9, time: 0.354042
+
+All Tasks Finished
+Writing Image Done
+mpirun -np 9 --oversubscribe bin/mandel_static
+static with 9 Workers
+work 4, time: 1.362720
+work 5, time: 1.362750
+work 7, time: 1.362741
+work 0, time: 1.420437
+work 1, time: 1.420433
+work 2, time: 1.420389
+work 3, time: 1.420193
+work 6, time: 1.420238
+work 9, time: 0.358646
+work 8, time: 0.358693
+
+All Tasks Finished
+Writing Image Done
+mpirun -np 2 --oversubscribe bin/mandel_dynamic
+dynamic with 2 Workers
+work 0, time: 0.171008
+work 1, time: 0.178131
+work 2, time: 0.181568
+work 3, time: 0.184415
+work 4, time: 0.189493
+work 5, time: 0.190641
+work 6, time: 0.176317
+work 7, time: 0.175354
+work 8, time: 0.180909
+work 9, time: 0.179795
+
+All Tasks Finished
+Writing Image Done
+mpirun -np 3 --oversubscribe bin/mandel_dynamic
+dynamic with 3 Workers
+work 0, time: 0.318796
+work 1, time: 0.336515
+work 2, time: 0.342198
+work 3, time: 0.341312
+work 4, time: 0.366059
+work 5, time: 0.346769
+work 6, time: 0.340438
+work 7, time: 0.329920
+work 8, time: 0.323838
+work 9, time: 0.330358
+
+All Tasks Finished
+Writing Image Done
+mpirun -np 5 --oversubscribe bin/mandel_dynamic
+dynamic with 5 Workers
+work 0, time: 0.749585
+work 3, time: 0.749622
+work 1, time: 0.794299
+work 2, time: 0.794142
+work 7, time: 0.682663
+work 6, time: 0.694194
+work 4, time: 0.750324
+work 5, time: 0.750309
+work 9, time: 0.351072
+work 8, time: 0.379161
+
+All Tasks Finished
+Writing Image Done
+mpirun -np 9 --oversubscribe bin/mandel_dynamic
+dynamic with 9 Workers
+work 2, time: 1.388841
+work 4, time: 1.388833
+work 6, time: 1.388822
+work 7, time: 1.388823
+work 0, time: 1.436578
+work 1, time: 1.436508
+work 3, time: 1.436529
+work 5, time: 1.436569
+work 8, time: 0.420213
+work 9, time: 0.420202
+
+All Tasks Finished
+Writing Image Done

@@ -14,18 +14,25 @@ unittest: unittest.c
 	mpicc unittest.c utils.c -o ./bin/unittest
 
 run: 
-	mpirun -np 1 bin/mandel_static
-	mpirun -np 2 bin/mandel_static
-	mpirun -np 4 bin/mandel_static
-	mpirun -np 8 bin/mandel_static
-	mpirun -np 1 bin/mandel_dynamic
-	mpirun -np 2 bin/mandel_dynamic
-	mpirun -np 4 bin/mandel_dynamic
-	mpirun -np 8 bin/mandel_dynamic
+	mpirun -np 2 --oversubscribe bin/mandel_static
+	mpirun -np 3 --oversubscribe bin/mandel_static
+	mpirun -np 5 --oversubscribe bin/mandel_static
+	mpirun -np 9 --oversubscribe bin/mandel_static
+	mpirun -np 2 --oversubscribe bin/mandel_dynamic
+	mpirun -np 3 --oversubscribe bin/mandel_dynamic
+	mpirun -np 5 --oversubscribe bin/mandel_dynamic
+	mpirun -np 9 --oversubscribe bin/mandel_dynamic
 
 run-example:
 	mpirun -np 2 bin/example
 
-clean:
-	rm bin/*
-	rm output/*
+cleanbin:
+	rm -r bin
+	mkdir bin
+cleandata:
+	rm -r images
+	mkdir images
+	mkdir images/static
+	mkdir images/static_final
+	mkdir images/dynamic
+	mkdir images/dynamic_final
