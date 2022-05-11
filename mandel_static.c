@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <complex.h>
+#include <time.h>
 #include "mpi.h"
 #include "utils.h"
 
 int main(int argc, char *argv[])
 {
-    const float Dheight = 400;
-    const float Dwidth = 400;
+    const int Dheight = 400;
+    const int Dwidth = 400;
     const int Nrect = 40;
     const int Alloc = 1;
     const int Result = Dheight * Nrect;
@@ -15,8 +16,8 @@ int main(int argc, char *argv[])
     const int real_min = -2;
     const int imag_max = 2;
     const int imag_min = -2;
-    float scale_real = (real_max - real_min) / Dwidth;
-    float scale_imag = (imag_max - imag_min) / Dheight;
+    float scale_real = (real_max - real_min) / (float)Dwidth;
+    float scale_imag = (imag_max - imag_min) / (float)Dheight;
 
     int np, me;
     int **MandleBuffer, *WorkerBuffer;
@@ -36,11 +37,18 @@ int main(int argc, char *argv[])
         }
     }
 
-    WorkerBuffer = (int *)malloc(12 * sizeof(int));
-    MandleBuffer = (int **)malloc(Dheight * sizeof(int *));
+    WorkerBuffer = (int *)calloc(sizeof(int), Nrect + 2);
+    MandleBuffer = (int **)calloc(sizeof(int *), Dheight);
     for (int h = 0; h < Dheight; h++)
     {
-        MandleBuffer[h] = (int *)malloc(Dwidth * sizeof(int));
+        MandleBuffer[h] = (int *)calloc(sizeof(int), Dwidth);
+    }
+    for (int h = 0; h < Dheight; h++)
+    {
+        for (int w = 0; w < Dwidth; w++)
+        {
+            MandleBuffer[h][w] = -1;
+        }
     }
 
     if (me == 0)
@@ -51,30 +59,28 @@ int main(int argc, char *argv[])
         {
             for (int p = 1; p < np; p++)
             {
-                int width = send_count * 10;
+                int width = send_count * Nrect;
                 MPI_Send(&width, Alloc, MPI_INT, p, tag, MPI_COMM_WORLD);
-                // printf("Allocated Job %d\r", p);
+
                 send_count++;
-                if (send_count >= Dwidth / 10)
+                if (send_count >= Dwidth / Nrect)
                     break;
             }
-            for (int tasks = 0; tasks < (np - 1) * (int)Dheight; tasks++)
+            for (int tasks = 0; tasks < (np - 1) * Dheight; tasks++)
             {
-                MPI_Recv(WorkerBuffer, 12, MPI_INT, MPI_ANY_SOURCE, tag, MPI_COMM_WORLD, &status);
-                // printf("Received %d / %d \r", tasks, (np - 1) * (int)Dheight);
-                for (int w = 2; w < 12; w++)
+                MPI_Recv(WorkerBuffer, Nrect + 2, MPI_INT, MPI_ANY_SOURCE, tag, MPI_COMM_WORLD, &status);
+                for (int w = 0; w < Nrect; w++)
                 {
-                    MandleBuffer[WorkerBuffer[1]][WorkerBuffer[0] + w] = WorkerBuffer[w];
+                    MandleBuffer[WorkerBuffer[1]][WorkerBuffer[0] + w] = WorkerBuffer[w + 2];
                 }
                 char name[] = "static";
                 recv_count++;
-                if (recv_count % 100 == 0)
-                    write_ppm(name, recv_count, Dwidth, Dheight, MandleBuffer);
-                if (recv_count >= Dwidth * Dheight / 10)
+                if (recv_count % 20 == 0)
+                    write_ppm(name, recv_count, np, Dwidth, Dheight, MandleBuffer);
+                if (recv_count >= Dwidth * Dheight / Nrect)
                     break;
             }
-            printf("Send: %d/%d, Recv: %d/%d \r", send_count, (int)Dwidth / 10, recv_count, (int)Dwidth * (int)Dheight / 10);
-            if (recv_count >= Dwidth * Dheight / 10)
+            if (recv_count >= Dwidth * Dheight / Nrect)
                 break;
         }
         for (int p = 1; p < np; p++)
@@ -85,7 +91,7 @@ int main(int argc, char *argv[])
 
         printf("\nAll Tasks Finished\n");
         char name[] = "static_final";
-        write_ppm(name, recv_count, Dwidth, Dheight, MandleBuffer);
+        // write_ppm(name, recv_count, np, Dwidth, Dheight, MandleBuffer);
         printf("Writing Image Done\n");
         free(MandleBuffer);
         MPI_Finalize();
@@ -99,6 +105,7 @@ int main(int argc, char *argv[])
         {
             MPI_Recv(&width_n, Alloc, MPI_INT, 0, tag, MPI_COMM_WORLD, &status);
             WorkerBuffer[0] = width_n;
+            double timelog = MPI_Wtime();
 
             if (width_n == -1)
             {
@@ -110,7 +117,7 @@ int main(int argc, char *argv[])
             for (int y = 0; y < Dheight; y++)
             {
                 WorkerBuffer[1] = y;
-                for (int x = width_n; x < (width_n + 10); x++)
+                for (int x = width_n; x < (width_n + Nrect); x++)
                 {
                     float complex c;
                     float c_real = real_min + (x * scale_real);
@@ -119,9 +126,10 @@ int main(int argc, char *argv[])
                     int color = calc_pixel(c);
                     WorkerBuffer[x - width_n + 2] = color;
                 }
-                MPI_Send(WorkerBuffer, 12, MPI_INT, 0, tag, MPI_COMM_WORLD);
+                MPI_Send(WorkerBuffer, Nrect + 2, MPI_INT, 0, tag, MPI_COMM_WORLD);
             }
-            // printf("Task %d Finished", width_n);
+            double total_time = MPI_Wtime() - timelog;
+            printf("work %d, time: %f\n", width_n / Nrect, total_time);
         }
     }
 }
