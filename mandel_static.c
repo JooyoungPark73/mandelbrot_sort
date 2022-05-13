@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
             time_average += temp;
         }
         printf("static, process, %d, average_time, %f\n", np, time_average * 1000 / (float)send_count);
-        printf("Main Exection time: %f", (log_array[1][send_count] - log_array[0][send_count]) * 1000);
+        printf("Main Exection time: %f\n", (log_array[1][send_count] - log_array[0][send_count]) * 1000);
         free(MandleBuffer);
         free(log_array);
         MPI_Finalize();

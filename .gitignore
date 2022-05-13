@@ -54,6 +54,7 @@ dkms.conf
 
 /.vscode
 /bin
-/images/*/*
+!/images/*/*
+/images/*/*/*
 /Archive
 *.csv

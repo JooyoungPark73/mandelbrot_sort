@@ -67,7 +67,6 @@ int main(int argc, char *argv[])
             log_array[h] = (double *)calloc(sizeof(double), total_send + 1);
         }
 
-        // printf("%s with %d Workers\n", name, np);
         log_array[0][total_send] = MPI_Wtime();
         while (send_count < np - 1)
         {
@@ -75,7 +74,6 @@ int main(int argc, char *argv[])
             log_array[0][send_count] = MPI_Wtime();
             send_count++;
         }
-
         while (fin_count < total_send)
         {
             MPI_Recv(WorkerBuffer, Nrect + 2, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
@@ -120,8 +118,9 @@ int main(int argc, char *argv[])
             time_average += temp;
         }
         printf("dynamic, process, %d, average_time, %f\n", np, time_average * 1000 / (float)send_count);
-        printf("Main Exection time: %f", (log_array[1][send_count] - log_array[0][send_count]) * 1000);
+        printf("Main Exection time: %f\n", (log_array[1][send_count] - log_array[0][send_count]) * 1000);
         free(MandleBuffer);
+        free(log_array);
         MPI_Finalize();
         exit(0);
     }

@@ -1,119 +1,104 @@
-static with 2 Workers
-work 0, time: 0.148959
-work 1, time: 0.166592
-work 2, time: 0.153150
-work 3, time: 0.154182
-work 4, time: 0.169001
-work 5, time: 0.155928
-work 6, time: 0.151776
-work 7, time: 0.155490
-work 8, time: 0.150588
-work 9, time: 0.153031
-
-All Tasks Finished
-Writing Image Done
+mpirun -np 2 --oversubscribe bin/mandel_static
+static, process, 2, worker, 0, time, 1.971000
+static, process, 2, worker, 1, time, 1.716000
+static, process, 2, worker, 2, time, 5.941000
+static, process, 2, worker, 3, time, 9.526000
+static, process, 2, worker, 4, time, 15.925000
+static, process, 2, worker, 5, time, 11.767000
+static, process, 2, worker, 6, time, 1.030000
+static, process, 2, worker, 7, time, 0.822000
+static, process, 2, worker, 8, time, 0.780000
+static, process, 2, worker, 9, time, 1.140000
+static, process, 2, average_time, 5.061800
+Main Exection time: 50.632000
 mpirun -np 3 --oversubscribe bin/mandel_static
-static with 3 Workers
-work 0, time: 0.319381
-work 1, time: 0.337992
-work 2, time: 0.313595
-work 3, time: 0.331156
-work 5, time: 0.324174
-work 4, time: 0.342699
-work 7, time: 0.314368
-work 6, time: 0.342264
-work 8, time: 0.358370
-work 9, time: 0.358351
-
-All Tasks Finished
-Writing Image Done
+static, process, 3, worker, 0, time, 1.803000
+static, process, 3, worker, 1, time, 2.682000
+static, process, 3, worker, 2, time, 6.633000
+static, process, 3, worker, 3, time, 10.363000
+static, process, 3, worker, 4, time, 16.100000
+static, process, 3, worker, 5, time, 11.772000
+static, process, 3, worker, 6, time, 1.030000
+static, process, 3, worker, 7, time, 0.823000
+static, process, 3, worker, 8, time, 0.779000
+static, process, 3, worker, 9, time, 0.731000
+static, process, 3, average_time, 5.271600
+Main Exection time: 26.386000
 mpirun -np 5 --oversubscribe bin/mandel_static
-static with 5 Workers
-work 0, time: 0.669685
-work 1, time: 0.716938
-work 2, time: 0.716882
-work 3, time: 0.716931
-work 6, time: 0.681577
-work 7, time: 0.681536
-work 4, time: 0.718325
-work 5, time: 0.718324
-work 8, time: 0.354054
-work 9, time: 0.354042
-
-All Tasks Finished
-Writing Image Done
+static, process, 5, worker, 0, time, 2.268000
+static, process, 5, worker, 1, time, 3.049000
+static, process, 5, worker, 2, time, 7.174000
+static, process, 5, worker, 3, time, 11.376000
+static, process, 5, worker, 4, time, 17.244000
+static, process, 5, worker, 5, time, 12.882000
+static, process, 5, worker, 6, time, 1.156000
+static, process, 5, worker, 7, time, 0.860000
+static, process, 5, worker, 8, time, 0.835000
+static, process, 5, worker, 9, time, 0.785000
+static, process, 5, average_time, 5.762900
+Main Exection time: 20.359000
 mpirun -np 9 --oversubscribe bin/mandel_static
-static with 9 Workers
-work 4, time: 1.362720
-work 5, time: 1.362750
-work 7, time: 1.362741
-work 0, time: 1.420437
-work 1, time: 1.420433
-work 2, time: 1.420389
-work 3, time: 1.420193
-work 6, time: 1.420238
-work 9, time: 0.358646
-work 8, time: 0.358693
-
-All Tasks Finished
-Writing Image Done
+static, process, 9, worker, 0, time, 2.072000
+static, process, 9, worker, 1, time, 2.818000
+static, process, 9, worker, 2, time, 7.917000
+static, process, 9, worker, 3, time, 12.240000
+static, process, 9, worker, 4, time, 19.527000
+static, process, 9, worker, 5, time, 15.095000
+static, process, 9, worker, 6, time, 1.921000
+static, process, 9, worker, 7, time, 1.252000
+static, process, 9, worker, 8, time, 1.012000
+static, process, 9, worker, 9, time, 0.898000
+static, process, 9, average_time, 6.475200
+Main Exection time: 19.552000
 mpirun -np 2 --oversubscribe bin/mandel_dynamic
-dynamic with 2 Workers
-work 0, time: 0.171008
-work 1, time: 0.178131
-work 2, time: 0.181568
-work 3, time: 0.184415
-work 4, time: 0.189493
-work 5, time: 0.190641
-work 6, time: 0.176317
-work 7, time: 0.175354
-work 8, time: 0.180909
-work 9, time: 0.179795
-
-All Tasks Finished
-Writing Image Done
+dynamic, process, 2, worker, 0, time, 1.362000
+dynamic, process, 2, worker, 1, time, 1.710000
+dynamic, process, 2, worker, 2, time, 5.772000
+dynamic, process, 2, worker, 3, time, 9.396000
+dynamic, process, 2, worker, 4, time, 16.636000
+dynamic, process, 2, worker, 5, time, 11.771000
+dynamic, process, 2, worker, 6, time, 1.031000
+dynamic, process, 2, worker, 7, time, 0.823000
+dynamic, process, 2, worker, 8, time, 0.778000
+dynamic, process, 2, worker, 9, time, 0.731000
+dynamic, process, 2, average_time, 5.001000
+Main Exection time: 50.021000
 mpirun -np 3 --oversubscribe bin/mandel_dynamic
-dynamic with 3 Workers
-work 0, time: 0.318796
-work 1, time: 0.336515
-work 2, time: 0.342198
-work 3, time: 0.341312
-work 4, time: 0.366059
-work 5, time: 0.346769
-work 6, time: 0.340438
-work 7, time: 0.329920
-work 8, time: 0.323838
-work 9, time: 0.330358
-
-All Tasks Finished
-Writing Image Done
+dynamic, process, 3, worker, 0, time, 1.402000
+dynamic, process, 3, worker, 1, time, 2.205000
+dynamic, process, 3, worker, 2, time, 6.029000
+dynamic, process, 3, worker, 3, time, 9.574000
+dynamic, process, 3, worker, 4, time, 16.127000
+dynamic, process, 3, worker, 5, time, 12.028000
+dynamic, process, 3, worker, 6, time, 1.030000
+dynamic, process, 3, worker, 7, time, 0.823000
+dynamic, process, 3, worker, 8, time, 0.778000
+dynamic, process, 3, worker, 9, time, 0.729000
+dynamic, process, 3, average_time, 5.072500
+Main Exection time: 25.376000
 mpirun -np 5 --oversubscribe bin/mandel_dynamic
-dynamic with 5 Workers
-work 0, time: 0.749585
-work 3, time: 0.749622
-work 1, time: 0.794299
-work 2, time: 0.794142
-work 7, time: 0.682663
-work 6, time: 0.694194
-work 4, time: 0.750324
-work 5, time: 0.750309
-work 9, time: 0.351072
-work 8, time: 0.379161
-
-All Tasks Finished
-Writing Image Done
+dynamic, process, 5, worker, 0, time, 1.687000
+dynamic, process, 5, worker, 1, time, 2.535000
+dynamic, process, 5, worker, 2, time, 7.402000
+dynamic, process, 5, worker, 3, time, 11.313000
+dynamic, process, 5, worker, 4, time, 17.251000
+dynamic, process, 5, worker, 5, time, 12.856000
+dynamic, process, 5, worker, 6, time, 1.076000
+dynamic, process, 5, worker, 7, time, 0.860000
+dynamic, process, 5, worker, 8, time, 0.813000
+dynamic, process, 5, worker, 9, time, 0.960000
+dynamic, process, 5, average_time, 5.675300
+Main Exection time: 18.949000
 mpirun -np 9 --oversubscribe bin/mandel_dynamic
-dynamic with 9 Workers
-work 2, time: 1.388841
-work 4, time: 1.388833
-work 6, time: 1.388822
-work 7, time: 1.388823
-work 0, time: 1.436578
-work 1, time: 1.436508
-work 3, time: 1.436529
-work 5, time: 1.436569
-work 8, time: 0.420213
-work 9, time: 0.420202
-
-All Tasks Finished
-Writing Image Done
+dynamic, process, 9, worker, 0, time, 2.035000
+dynamic, process, 9, worker, 1, time, 3.160000
+dynamic, process, 9, worker, 2, time, 7.334000
+dynamic, process, 9, worker, 3, time, 12.179000
+dynamic, process, 9, worker, 4, time, 20.499000
+dynamic, process, 9, worker, 5, time, 14.353000
+dynamic, process, 9, worker, 6, time, 1.559000
+dynamic, process, 9, worker, 7, time, 1.544000
+dynamic, process, 9, worker, 8, time, 0.960000
+dynamic, process, 9, worker, 9, time, 0.841000
+dynamic, process, 9, average_time, 6.446400
+Main Exection time: 20.526000

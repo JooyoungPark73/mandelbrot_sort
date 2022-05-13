@@ -1,6 +1,12 @@
 all: static dynamic
 
-
+init: 
+	mkdir -p bin
+	mkdir -p images/static
+	mkdir -p images/static_final
+	mkdir -p images/dynamic
+	mkdir -p images/dynamic_final
+	
 static: mandel_static.c
 	mpicc mandel_static.c utils.c -o ./bin/mandel_static
 
@@ -31,8 +37,7 @@ cleanbin:
 	mkdir bin
 cleandata:
 	rm -r images
-	mkdir images
-	mkdir images/static
-	mkdir images/static_final
-	mkdir images/dynamic
-	mkdir images/dynamic_final
+	mkdir -p images/static
+	mkdir -p images/static_final
+	mkdir -p images/dynamic
+	mkdir -p images/dynamic_final
